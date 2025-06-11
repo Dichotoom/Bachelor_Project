@@ -1,0 +1,37 @@
+# config/experiment_config.yaml
+
+experiment:
+  runs: 5
+  train_size: 240
+  eval_size: 60
+  seed_offset: 16 # Offset added to run_idx to generate unique seeds for each experiment run
+
+model:
+  name: "Qwen/Qwen2.5-Math-1.5B"
+  torch_dtype: "bfloat16"
+
+training_args:
+  output_dir: "./grpo_math_finetune"
+  logging_steps: 1
+  per_device_train_batch_size: 1
+  gradient_accumulation_steps: 8
+  bf16: True
+  num_generations: 6
+  max_grad_norm: 0.1
+  learning_rate: 2.0e-5
+  num_train_epochs: 2
+  max_prompt_length: 256
+  max_completion_length: 300
+
+evaluation:
+  num_samples_per_eval: 6 # Number of completions to generate per evaluation item
+  enforce_format_for_grpo: True # Whether to check for <reasoning>/<answer> tags in GRPO model's output
+  enforce_format_for_baseline: False # Whether to check for <reasoning>/<answer> tags in baseline model's output
+  evaluation_seed: 43
+  temperature: 0.6
+  top_p: 0.95
+  max_completion_length_eval: 2048 # Maximum token length for generated completions during evaluation
+
+paths:
+  plot_data_filename: "grpo_training_results.npz"
+  combined_plot_filename: "combined_rewards.png"
